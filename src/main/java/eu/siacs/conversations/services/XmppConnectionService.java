@@ -918,6 +918,10 @@ public class XmppConnectionService extends Service {
         mChannelDiscoveryService.discover(Strings.nullToEmpty(query).trim(), method, onChannelSearchResultsFound);
     }
 
+    public void getWeather(ChannelDiscoveryService.OnWeather onChannelSearchResultsFound){
+        mChannelDiscoveryService.getWeatherInfo(onChannelSearchResultsFound);
+    }
+
     public boolean isDataSaverDisabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);

@@ -46,6 +46,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.IdRes;
@@ -53,6 +54,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.openintents.openpgp.util.OpenPgpApi;
 
@@ -375,6 +378,32 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             pendingViewIntent.push(intent);
             setIntent(createLauncherIntent(this));
         }
+
+        binding.tapLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getPosition()==1) {
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.main_fragment, new WeatherFragment());
+                    transaction.commit();
+                }
+                else{
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.main_fragment, new ConversationsOverviewFragment());
+                    transaction.commit();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     @Override
@@ -608,9 +637,11 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 if (conversation != null) {
                     actionBar.setTitle(EmojiWrapper.transform(conversation.getName()));
                     actionBar.setDisplayHomeAsUpEnabled(true);
+                    binding.tapLayout.setVisibility(View.GONE);
                     return;
                 }
             }
+            binding.tapLayout.setVisibility(View.VISIBLE);
             actionBar.setTitle(R.string.app_name);
             actionBar.setDisplayHomeAsUpEnabled(false);
         }

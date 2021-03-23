@@ -352,6 +352,29 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         this.user = new WeakReference<>(user);
     }
 
+    public boolean isSelfAdmin(){
+        if (this.conversation instanceof Conversation && conversation.getMode() == Conversation.MODE_MULTI) {
+            final Conversation conversation = (Conversation) this.conversation;
+            return conversation.getMucOptions().getSelf().getAffiliation().ranks(MucOptions.Affiliation.ADMIN);
+    }
+        return false;
+    }
+
+    public boolean isAdmin() {
+        if (this.conversation instanceof Conversation && conversation.getMode() == Conversation.MODE_MULTI) {
+            final Conversation conversation = (Conversation) this.conversation;
+            Jid jid = getCounterpart();
+            if (jid != null && !jid.isBareJid()) {
+                final MucOptions mucOptions = conversation.getMucOptions();
+                MucOptions.User user=  mucOptions.findUserByFullJid(jid);
+                if(user!=null){
+                    return user.getAffiliation().ranks(MucOptions.Affiliation.ADMIN);
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean sameMucUser(Message otherMessage) {
         final MucOptions.User thisUser = this.user == null ? null : this.user.get();
         final MucOptions.User otherUser = otherMessage.user == null ? null : otherMessage.user.get();

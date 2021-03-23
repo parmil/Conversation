@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import eu.siacs.conversations.entities.Room;
+import eu.siacs.conversations.entities.WeatherResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -15,6 +16,9 @@ public interface MuclumbusService {
 
     @GET("/api/1.0/rooms/unsafe")
     Call<Rooms> getRooms(@Query("p") int page);
+
+    @GET("http://api.openweathermap.org/data/2.5/find?lat=28.70&lon=77.10&cnt=10&appid=355f05a4c67796c2ae28dea908e72c2c")
+    Call<WeatherResponse> getWeatherInfo();
 
     @POST("/api/1.0/search")
     Call<SearchResult> search(@Body SearchRequest searchRequest);

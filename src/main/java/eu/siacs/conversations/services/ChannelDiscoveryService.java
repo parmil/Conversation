@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Room;
+import eu.siacs.conversations.entities.WeatherResponse;
 import eu.siacs.conversations.http.HttpConnectionManager;
 import eu.siacs.conversations.http.services.MuclumbusService;
 import eu.siacs.conversations.parser.IqParser;
@@ -104,6 +105,27 @@ public class ChannelDiscoveryService {
                 public void onFailure(@NonNull Call<MuclumbusService.Rooms> call, @NonNull Throwable throwable) {
                     Log.d(Config.LOGTAG, "Unable to query muclumbus on " + Config.CHANNEL_DISCOVERY, throwable);
                     listener.onChannelSearchResultsFound(Collections.emptyList());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    void getWeatherInfo(ChannelDiscoveryService.OnWeather listener) {
+        Call<WeatherResponse> call = muclumbusService.getWeatherInfo();
+        try {
+            call.enqueue(new Callback<WeatherResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
+                    final WeatherResponse body = response.body();
+                    listener.onWeatherResultsFound(body);
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<WeatherResponse> call, @NonNull Throwable throwable) {
+                    listener.onWeatherResultsFound(null);
                 }
             });
         } catch (Exception e) {
@@ -247,6 +269,10 @@ public class ChannelDiscoveryService {
 
     public interface OnChannelSearchResultsFound {
         void onChannelSearchResultsFound(List<Room> results);
+    }
+
+    public interface OnWeather {
+        void onWeatherResultsFound(WeatherResponse results);
     }
 
     public enum Method {

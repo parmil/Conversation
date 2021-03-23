@@ -208,7 +208,9 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
         }
         return true;
     }
-
+   // http://api.openweathermap.org/data/2.5/box/city?bbox=12,32,15,37,10&appid=355f05a4c67796c2ae28dea908e72c2c
+   // http://api.openweathermap.org/data/2.5/find?lat=28.70&lon=77.10&cnt=10&appid=355f05a4c67796c2ae28dea908e72c2c
+   // http://api.openweathermap.org/data/2.5/weather?q=india&appid=355f05a4c67796c2ae28dea908e72c2c
     @Override
     public void onChannelSearchResultsFound(final List<Room> results) {
         runOnUiThread(() -> {

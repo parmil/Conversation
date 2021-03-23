@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -48,6 +49,7 @@ import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Message.FileParams;
+import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.entities.RtpSessionStatus;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.persistance.FileBackend;
@@ -823,12 +825,18 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         if (type == RECEIVED) {
             if (isInValidSession) {
                 int bubble;
-                if (!mUseGreenBackground) {
-                    bubble = activity.getThemeResource(R.attr.message_bubble_received_monochrome, R.drawable.message_bubble_received_white);
-                } else {
-                    bubble = activity.getThemeResource(R.attr.message_bubble_received_green, R.drawable.message_bubble_received);
+                if(message.isAdmin()){
+                     viewHolder.message_box.setBackgroundTintList(ColorStateList.valueOf(activity.getResources().getColor(R.color.blue_a700)));
                 }
-                viewHolder.message_box.setBackgroundResource(bubble);
+                else {
+                    if (!mUseGreenBackground) {
+                        bubble = activity.getThemeResource(R.attr.message_bubble_received_monochrome, R.drawable.message_bubble_received_white);
+                    } else {
+                        bubble = activity.getThemeResource(R.attr.message_bubble_received_green, R.drawable.message_bubble_received);
+                    }
+                    viewHolder.message_box.setBackgroundResource(bubble);
+               }
+
                 viewHolder.encryption.setVisibility(View.GONE);
             } else {
                 viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_warning);
@@ -838,6 +846,15 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 } else {
                     viewHolder.encryption.setText(CryptoHelper.encryptionTypeToText(message.getEncryption()));
                 }
+            }
+        }
+        else{
+            if(message.isSelfAdmin()){
+                viewHolder.message_box.setBackgroundTintList(ColorStateList.valueOf(activity.getResources().getColor(R.color.blue_a700)));
+            }
+            else{
+                int bubble = activity.getThemeResource(R.attr.message_bubble_received_monochrome, R.drawable.message_bubble_received_white);
+                viewHolder.message_box.setBackgroundResource(bubble);
             }
         }
 
